@@ -1,0 +1,41 @@
+{{ block "content" . }}
+  <div id="content">
+    <p>Loaded ROM: {{ romName . }}</p>
+    <p>PC = ${{ pc . }}</p>
+    <p>SP = ${{ sp . }}</p>
+    <table>
+      <tr>
+        <th>A</th>
+        <th>F</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+        <th>H</th>
+        <th>L</th>
+      </tr>
+      <tr>
+        <td>{{ a . }}</td>
+        <td>{{ f . }}</td>
+        <td>{{ b . }}</td>
+        <td>{{ c . }}</td>
+        <td>{{ d . }}</td>
+        <td>{{ e . }}</td>
+        <td>{{ h . }}</td>
+        <td>{{ l . }}</td>
+      </tr>
+    </table>
+
+    <p>{{ flags . }}</p>
+
+    <table>
+      {{ range memory . }}
+        <tr>
+          <td>{{ . }}</td>
+        </tr>
+      {{ end }}
+    </table>
+
+    <button hx-post="/api/step" hx-trigger="click" hx-swap="outerHTML" hx-target="#content">Step</button>
+  </div>
+{{ end }}
