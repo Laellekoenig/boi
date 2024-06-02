@@ -1,5 +1,14 @@
 package cpu
 
+type flagType uint8
+
+const (
+	FlagZ flagType = iota
+	FlagN
+	FlagH
+	FlagC
+)
+
 func maskBit(i uint8) uint8 {
 	return 1 << i
 }

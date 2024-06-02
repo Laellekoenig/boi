@@ -2,32 +2,11 @@ package cpu
 
 type word = uint16
 
-type registerType uint8
-
 type MemoryReader interface {
 	ByteAt(word) byte
 	WordAt(word) word
+	WriteByteAt(byte, word)
 }
-
-const (
-	RegA registerType = iota
-	RegF
-	RegB
-	RegC
-	RegD
-	RegE
-	RegH
-	RegL
-)
-
-type flagType uint8
-
-const (
-	FlagZ flagType = iota
-	FlagN
-	FlagH
-	FlagC
-)
 
 type Cpu struct {
 	a byte
@@ -67,10 +46,33 @@ func (c *Cpu) reset() {
 	c.pc = 0x0100
 }
 
+func (c *Cpu) currentByte() byte {
+	b := c.bus.ByteAt(c.pc)
+	c.pc += 1
+	return b
+}
+
+func (c *Cpu) peakByte() byte {
+	return c.bus.ByteAt(c.pc)
+}
+
+func (c *Cpu) currentWord() word {
+	w := c.bus.WordAt(c.pc)
+	c.pc += 2
+	return w
+}
+
+func (c *Cpu) peakWord() word {
+	return c.bus.WordAt(c.pc)
+}
+
+func (c *Cpu) dereferenceRegister(r doubleRegisterType) byte {
+	return c.bus.ByteAt(c.readDoubleRegister(r))
+}
+
 func (c *Cpu) ExecuteStep() {
-	opcode := c.bus.ByteAt(c.pc)
+	opcode := c.currentByte()
 	instruction := InstrucionFromByte(opcode)
 	// TODO: handle timing
-	// t := instruction.Timing()
-	instruction.Execute(c)
+	_ = instruction.Execute(c)
 }

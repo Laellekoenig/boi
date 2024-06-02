@@ -45,14 +45,8 @@ func (c *Cpu) GetRegister(t registerType) string {
 func (c *Cpu) GetFlags() string {
 	var buf bytes.Buffer
 
-	if c.CheckFlag(FlagZ) {
-		buf.WriteString("Z")
-	} else {
-		buf.WriteString("-")
-	}
-
-	if c.CheckFlag(FlagN) {
-		buf.WriteString("N")
+	if c.CheckFlag(FlagC) {
+		buf.WriteString("C")
 	} else {
 		buf.WriteString("-")
 	}
@@ -63,8 +57,14 @@ func (c *Cpu) GetFlags() string {
 		buf.WriteString("-")
 	}
 
-	if c.CheckFlag(FlagC) {
-		buf.WriteString("C")
+	if c.CheckFlag(FlagN) {
+		buf.WriteString("N")
+	} else {
+		buf.WriteString("-")
+	}
+
+	if c.CheckFlag(FlagZ) {
+		buf.WriteString("Z")
 	} else {
 		buf.WriteString("-")
 	}
