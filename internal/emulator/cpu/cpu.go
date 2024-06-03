@@ -6,6 +6,8 @@ type MemoryReader interface {
 	ByteAt(word) byte
 	WordAt(word) word
 	WriteByteAt(byte, word)
+	WriteWordAt(word, word)
+	Reset()
 }
 
 type Cpu struct {
@@ -75,4 +77,9 @@ func (c *Cpu) ExecuteStep() {
 	instruction := InstrucionFromByte(opcode)
 	// TODO: handle timing
 	_ = instruction.Execute(c)
+}
+
+func (c *Cpu) Reset() {
+	c.reset()
+	c.bus.Reset()
 }

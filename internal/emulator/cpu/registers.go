@@ -13,6 +13,38 @@ const (
 	RegL
 )
 
+func (c *Cpu) getRegister(t registerType) *byte {
+	switch t {
+	case RegA:
+		return &c.a
+	case RegF:
+		return &c.f
+	case RegB:
+		return &c.b
+	case RegC:
+		return &c.c
+	case RegD:
+		return &c.d
+	case RegE:
+		return &c.e
+	case RegH:
+		return &c.h
+	case RegL:
+		return &c.l
+	default:
+		panic("invalid register type")
+	}
+}
+
+func (c *Cpu) readRegister(t registerType) byte {
+	return *c.getRegister(t)
+}
+
+func (c *Cpu) writeRegister(b byte, t registerType) {
+	r := c.getRegister(t)
+	*r = b
+}
+
 type doubleRegisterType uint8
 
 const (
@@ -58,5 +90,10 @@ func (c *Cpu) writeDoubleRegister(w word, r doubleRegisterType) {
 
 func (c *Cpu) incDoubleRegister(r doubleRegisterType) {
 	v := c.readDoubleRegister(r) + 1
+	c.writeDoubleRegister(v, r)
+}
+
+func (c *Cpu) decDoubleRegister(r doubleRegisterType) {
+	v := c.readDoubleRegister(r) - 1
 	c.writeDoubleRegister(v, r)
 }
