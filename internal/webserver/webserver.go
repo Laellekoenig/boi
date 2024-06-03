@@ -27,6 +27,11 @@ func NewServer(e *emulator.Emulator) *echo.Echo {
 		return c.Render(http.StatusOK, "content.html", e)
 	})
 
+	app.POST("/api/continue-unimplemented", func(c echo.Context) error {
+		e.Cpu.ContinueUnimpl()
+		return c.Render(http.StatusOK, "content.html", e)
+	})
+
 	app.Static("/static", "static")
 
 	return app

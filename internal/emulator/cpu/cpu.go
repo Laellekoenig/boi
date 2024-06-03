@@ -23,6 +23,8 @@ type Cpu struct {
 	sp word
 	pc word
 
+	ime bool
+
 	bus MemoryReader
 }
 
@@ -79,7 +81,35 @@ func (c *Cpu) ExecuteStep() {
 	_ = instruction.Execute(c)
 }
 
+func (c *Cpu) ContinueUnimpl() {
+	for {
+		opcode := c.peakByte()
+		instruction := InstrucionFromByte(opcode)
+
+		if instruction.String() == "Not implemented" {
+			break
+		}
+
+		c.pc += 1
+
+		// TODO: handle timing
+		_ = instruction.Execute(c)
+
+	}
+}
+
 func (c *Cpu) Reset() {
 	c.reset()
 	c.bus.Reset()
+}
+
+func (c *Cpu) popWord() word {
+	w := c.bus.WordAt(c.sp)
+	c.sp += 2
+	return w
+}
+
+func (c *Cpu) pushWord(w word) {
+	c.sp -= 2
+	c.bus.WriteWordAt(w, c.sp)
 }

@@ -17,15 +17,6 @@ func (n *nop) Execute(c *Cpu) uint8 {
 	return 4
 }
 
-type jpIm struct{}
-
-func (j *jpIm) String() string { return "JP u16" }
-func (j *jpIm) Execute(c *Cpu) uint8 {
-	addr := c.currentWord()
-	c.jump(addr, None)
-	return 16
-}
-
 func InstrucionFromByte(opcode byte) instruction {
 	switch opcode {
 	case 0x00:
@@ -34,44 +25,118 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldBCIm{}
 	case 0x02:
 		return &ldDerefBCA{}
+	case 0x03:
+		return &incBC{}
+	case 0x04:
+		return &incB{}
+	case 0x05:
+		return &decB{}
 	case 0x06:
 		return &ldBIm{}
 	case 0x08:
 		return &ldDerefImSP{}
+	case 0x09:
+		return &addHLBC{}
 	case 0x0a:
 		return &ldADerefBC{}
+	case 0x0b:
+		return &decBC{}
+	case 0x0c:
+		return &incC{}
+	case 0x0d:
+		return &decC{}
 	case 0x0e:
 		return &ldCIm{}
 	case 0x11:
 		return &ldDEIm{}
 	case 0x12:
 		return &ldDerefDEA{}
+	case 0x13:
+		return &incDE{}
+	case 0x14:
+		return &incD{}
+	case 0x15:
+		return &decD{}
 	case 0x16:
 		return &ldDIm{}
+	case 0x18:
+		return &jrIm{}
+	case 0x19:
+		return &addHLDE{}
 	case 0x1a:
 		return &ldADerefDE{}
+	case 0x1b:
+		return &decDE{}
+	case 0x1c:
+		return &incE{}
+	case 0x1d:
+		return &decE{}
 	case 0x1e:
 		return &ldEIm{}
+	case 0x20:
+		return &jrNZIm{}
 	case 0x21:
 		return &ldHLIm{}
 	case 0x22:
 		return &ldDerefIncHLA{}
+	case 0x23:
+		return &incHL{}
+	case 0x24:
+		return &incH{}
+	case 0x25:
+		return &decH{}
 	case 0x26:
 		return &ldHIm{}
+	case 0x27:
+		return &daa{}
+	case 0x28:
+		return &jrZIm{}
+	case 0x29:
+		return &addHLHL{}
 	case 0x2a:
 		return &ldADerefIncHL{}
+	case 0x2b:
+		return &decHL{}
+	case 0x2c:
+		return &incL{}
+	case 0x2d:
+		return &decL{}
 	case 0x2e:
 		return &ldLIm{}
+	case 0x2f:
+		return &cpl{}
+	case 0x30:
+		return &jrNCIm{}
 	case 0x31:
 		return &ldSPIm{}
 	case 0x32:
 		return &ldDerefDecHLA{}
+	case 0x33:
+		return &incSP{}
+	case 0x34:
+		return &incDerefHL{}
+	case 0x35:
+		return &decDerefHL{}
 	case 0x36:
 		return &ldDerefHLIm{}
+	case 0x37:
+		return &scf{}
+	case 0x38:
+		return &jrCIm{}
+	case 0x39:
+		return &addHLSP{}
 	case 0x3a:
 		return &ldADerefDecHL{}
+	case 0x3b:
+		return &decSP{}
+	case 0x3c:
+		return &incA{}
+	case 0x3d:
+		return &decA{}
 	case 0x3e:
 		return &ldAIm{}
+	case 0x3f:
+		return &ccf{}
 	case 0x40:
 		return &ldBB{}
 	case 0x41:
@@ -198,22 +263,70 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldADerefHL{}
 	case 0x7f:
 		return &ldAA{}
+	case 0xc0:
+		return &retNZ{}
+	case 0xc2:
+		return &jpNZIm{}
+	case 0xc3:
+		return &jpIm{}
+	case 0xc4:
+		return &callNZIm{}
+	case 0xc7:
+		return &rst00h{}
+	case 0xc8:
+		return &retZ{}
+	case 0xc9:
+		return &ret{}
+	case 0xca:
+		return &jpZIm{}
+	case 0xcc:
+		return &callZIm{}
+	case 0xcd:
+		return &callIm{}
+	case 0xcf:
+		return &rst08h{}
+	case 0xd0:
+		return &retNC{}
+	case 0xd2:
+		return &jpNCIm{}
+	case 0xd4:
+		return &callNCIm{}
+	case 0xd7:
+		return &rst10h{}
+	case 0xd8:
+		return &retC{}
+	case 0xd9:
+		return &reti{}
+	case 0xda:
+		return &jpCIm{}
+	case 0xdc:
+		return &callCIm{}
+	case 0xdf:
+		return &rst18h{}
 	case 0xe0:
 		return &ldDerefOffsetImA{}
 	case 0xe2:
 		return &ldDerefOffsetCA{}
+	case 0xe7:
+		return &rst20h{}
+	case 0xe9:
+		return &jpHL{}
 	case 0xea:
 		return &ldDerefImA{}
+	case 0xef:
+		return &rst28h{}
 	case 0xf0:
 		return &ldADerefOffsetIm{}
 	case 0xf2:
 		return &ldADerefOffsetC{}
+	case 0xf7:
+		return &rst30h{}
 	case 0xf9:
 		return &ldSPHL{}
 	case 0xfa:
 		return &ldADerefIm{}
-	case 0xc3:
-		return &jpIm{}
+	case 0xff:
+		return &rst38h{}
 	}
 
 	return &notImplemented{}

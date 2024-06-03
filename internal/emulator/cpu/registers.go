@@ -87,13 +87,3 @@ func (c *Cpu) writeDoubleRegister(w word, r doubleRegisterType) {
 	*bs[0] = byte(w >> 8)
 	*bs[1] = byte(w & 0xff)
 }
-
-func (c *Cpu) incDoubleRegister(r doubleRegisterType) {
-	v := c.readDoubleRegister(r) + 1
-	c.writeDoubleRegister(v, r)
-}
-
-func (c *Cpu) decDoubleRegister(r doubleRegisterType) {
-	v := c.readDoubleRegister(r) - 1
-	c.writeDoubleRegister(v, r)
-}

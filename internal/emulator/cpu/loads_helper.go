@@ -30,25 +30,25 @@ func (c *Cpu) ldRegDerefRegs(from doubleRegisterType, to registerType) {
 
 func (c *Cpu) ldDerefIncHLA() {
 	addr := c.readDoubleRegister(RegsHL)
-	c.incDoubleRegister(RegsHL)
+	c.incRegs(RegsHL)
 	c.bus.WriteByteAt(c.readRegister(RegA), addr)
 }
 
 func (c *Cpu) ldDerefDecHLA() {
 	addr := c.readDoubleRegister(RegsHL)
-	c.decDoubleRegister(RegsHL)
+	c.decRegs(RegsHL)
 	c.bus.WriteByteAt(c.readRegister(RegA), addr)
 }
 
 func (c *Cpu) ldADerefIncHL() {
 	addr := c.readDoubleRegister(RegsHL)
-	c.incDoubleRegister(RegsHL)
+	c.incRegs(RegsHL)
 	c.writeRegister(c.bus.ByteAt(addr), RegA)
 }
 
 func (c *Cpu) ldADerefDecHL() {
 	addr := c.readDoubleRegister(RegsHL)
-	c.decDoubleRegister(RegsHL)
+	c.decRegs(RegsHL)
 	c.writeRegister(c.bus.ByteAt(addr), RegA)
 }
 
