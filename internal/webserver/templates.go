@@ -55,6 +55,9 @@ func newTemplate() *Template {
 			"flags": func(e *emulator.Emulator) interface{} {
 				return e.Cpu.GetFlags()
 			},
+			"pastOps": func(e *emulator.Emulator) interface{} {
+				return e.Cpu.PastOps
+			},
 		}).ParseGlob("views/*.html")),
 	}
 }

@@ -1,14 +1,20 @@
 package cpu
 
+import "fmt"
+
 type instruction interface {
 	String() string
 	Execute(c *Cpu) uint8
 }
 
-type notImplemented struct{}
+type notImplemented struct {
+	opcode byte
+}
 
-func (n *notImplemented) String() string       { return "Not implemented" }
-func (n *notImplemented) Execute(c *Cpu) uint8 { panic("instruction not implemented") }
+func (n *notImplemented) String() string { return "Not implemented" }
+func (n *notImplemented) Execute(c *Cpu) uint8 {
+	panic(fmt.Sprintf("instruction %02x not implemented", n.opcode))
+}
 
 type nop struct{}
 
@@ -325,9 +331,11 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldSPHL{}
 	case 0xfa:
 		return &ldADerefIm{}
+	case 0xfb:
+		return &ei{}
 	case 0xff:
 		return &rst38h{}
 	}
 
-	return &notImplemented{}
+	return &notImplemented{opcode}
 }

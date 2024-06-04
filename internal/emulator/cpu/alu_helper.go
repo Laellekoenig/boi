@@ -11,20 +11,20 @@ func (c *Cpu) decRegs(r doubleRegisterType) {
 }
 
 func (c *Cpu) incReg(t registerType) {
-	rv := c.readRegister(t)
-	c.setFlag(FlagH, doesByteAddHalfCarry(rv, 1))
-	rv += 1
-	c.writeRegister(rv, t)
-	c.setFlag(FlagZ, rv == 0)
+	oldVal := c.readRegister(t)
+	c.writeRegister(oldVal+1, t)
+
+	c.setFlag(FlagH, doesByteAddHalfCarry(oldVal, 1))
+	c.setFlag(FlagZ, oldVal == 0xff)
 	c.setFlag(FlagN, false)
 }
 
 func (c *Cpu) decReg(t registerType) {
-	rv := c.readRegister(t)
-	c.setFlag(FlagH, doesByteSubHalfCarry(rv, 1))
-	rv -= 1
-	c.writeRegister(rv, t)
-	c.setFlag(FlagZ, rv == 0)
+	oldVal := c.readRegister(t)
+	c.writeRegister(oldVal-1, t)
+
+	c.setFlag(FlagH, doesByteSubHalfCarry(oldVal, 1))
+	c.setFlag(FlagZ, oldVal == 1)
 	c.setFlag(FlagN, true)
 }
 

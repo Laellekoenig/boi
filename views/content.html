@@ -39,5 +39,26 @@
     <button hx-post="/api/step" hx-trigger="click" hx-swap="outerHTML" hx-target="#content">Step</button>
     <button hx-post="/api/reset" hx-trigger="click" hx-swap="outerHTML" hx-target="#content">Reset</button>
     <button hx-post="/api/continue-unimplemented" hx-trigger="click" hx-swap="outerHTML" hx-target="#content">Continue until unimplemented</button>
+
+    <form
+      hx-post="/api/continue-until"
+      hx-target="#content"
+      hx-swap="outerHTML"
+    >
+      <input type="text" name="bp"></input>
+      <button type="submit">Go to breakpoint</button>
+    </form>
+
+    <div id="pastOps">
+      <table>
+        {{ range pastOps . }}
+        <tr>
+          <td>
+            {{ . }}
+          </td>
+        </tr>
+        {{ end }}
+      </table>
+    </div>
   </div>
 {{ end }}

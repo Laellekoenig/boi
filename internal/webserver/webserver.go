@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Laellekoenig/boi/internal/emulator"
 	"github.com/labstack/echo/v4"
@@ -29,6 +30,17 @@ func NewServer(e *emulator.Emulator) *echo.Echo {
 
 	app.POST("/api/continue-unimplemented", func(c echo.Context) error {
 		e.Cpu.ContinueUnimpl()
+		return c.Render(http.StatusOK, "content.html", e)
+	})
+
+	app.POST("/api/continue-until", func(c echo.Context) error {
+		bp, err := strconv.ParseUint(c.FormValue("bp"), 16, 16)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Invalid breakpoint")
+		}
+
+		e.Cpu.ContinueUntil(uint16(bp))
+
 		return c.Render(http.StatusOK, "content.html", e)
 	})
 
