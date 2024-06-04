@@ -44,6 +44,12 @@ func NewServer(e *emulator.Emulator) *echo.Echo {
 		return c.Render(http.StatusOK, "content.html", e)
 	})
 
+	app.POST("/api/continue-flag-change", func(c echo.Context) error {
+		e.Cpu.ContinueUntilFlagChange()
+
+		return c.Render(http.StatusOK, "content.html", e)
+	})
+
 	app.Static("/static", "static")
 
 	return app

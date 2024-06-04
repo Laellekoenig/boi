@@ -3,10 +3,10 @@ package cpu
 type flagType uint8
 
 const (
-	FlagZ flagType = iota
-	FlagN
-	FlagH
-	FlagC
+	FlagZ flagType = 7
+	FlagN flagType = 6
+	FlagH flagType = 5
+	FlagC flagType = 4
 )
 
 func maskBit(i uint8) uint8 {
@@ -14,46 +14,13 @@ func maskBit(i uint8) uint8 {
 }
 
 func (c *Cpu) checkFlag(ft flagType) bool {
-	switch ft {
-	case FlagZ:
-		return c.f&maskBit(7) > 0
-	case FlagN:
-		return c.f&maskBit(6) > 0
-	case FlagH:
-		return c.f&maskBit(5) > 0
-	case FlagC:
-		return c.f&maskBit(4) > 0
-	}
-	panic("Invalid flag")
+	return c.f&maskBit(uint8(ft)) > 0
 }
 
 func (c *Cpu) setFlag(ft flagType, f bool) {
-	switch ft {
-	case FlagZ:
-		if f {
-			c.f |= maskBit(7)
-		} else {
-			c.f &= ^maskBit(7)
-		}
-	case FlagN:
-		if f {
-			c.f |= maskBit(6)
-		} else {
-			c.f &= ^maskBit(6)
-		}
-	case FlagH:
-		if f {
-			c.f |= maskBit(5)
-		} else {
-			c.f &= ^maskBit(5)
-		}
-	case FlagC:
-		if f {
-			c.f |= maskBit(4)
-		} else {
-			c.f &= ^maskBit(4)
-		}
-	default:
-		panic("Invalid flag")
+	if f {
+		c.f |= maskBit(uint8(ft))
+	} else {
+		c.f &= ^maskBit(uint8(ft))
 	}
 }

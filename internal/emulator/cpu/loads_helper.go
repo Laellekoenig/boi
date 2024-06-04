@@ -77,7 +77,9 @@ func (c *Cpu) ldAOffsetC() {
 }
 
 func (c *Cpu) ldDerefImA() {
-	c.bus.WriteWordAt(c.currentWord(), c.currentWord())
+	addr := c.currentWord()
+	b := c.readRegister(RegA)
+	c.bus.WriteByteAt(b, addr)
 }
 
 func (c *Cpu) ldADerefIm() {

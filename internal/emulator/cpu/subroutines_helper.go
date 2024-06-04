@@ -11,9 +11,11 @@ const (
 )
 
 func (c *Cpu) jumpIm(condition jumpCondition) uint8 {
+	target := c.currentWord()
+
 	switch condition {
 	case None:
-		// nothing
+		// always jump
 	case NZ:
 		if c.checkFlag(FlagZ) {
 			return 12
@@ -34,15 +36,17 @@ func (c *Cpu) jumpIm(condition jumpCondition) uint8 {
 		panic("invalid condition")
 	}
 
-	c.pc = c.currentWord()
+	c.pc = target
 
 	return 16
 }
 
 func (c *Cpu) jumpRelativeIm(condition jumpCondition) uint8 {
+	offset := int8(c.currentByte())
+
 	switch condition {
 	case None:
-		// nothing
+		// always jump
 	case NZ:
 		if c.checkFlag(FlagZ) {
 			return 8
@@ -63,7 +67,7 @@ func (c *Cpu) jumpRelativeIm(condition jumpCondition) uint8 {
 		panic("invalid condition")
 	}
 
-	newPC := int32(c.pc) + int32(int8(c.currentByte()))
+	newPC := int32(c.pc) + int32(offset)
 	c.pc = word(newPC)
 
 	return 12
@@ -72,7 +76,7 @@ func (c *Cpu) jumpRelativeIm(condition jumpCondition) uint8 {
 func (c *Cpu) ret(condition jumpCondition) uint8 {
 	switch condition {
 	case None:
-		// nothing
+		// always return
 	case NZ:
 		if c.checkFlag(FlagZ) {
 			return 8
@@ -99,9 +103,11 @@ func (c *Cpu) ret(condition jumpCondition) uint8 {
 }
 
 func (c *Cpu) callIm(condition jumpCondition) uint8 {
+	target := c.currentWord()
+
 	switch condition {
 	case None:
-		// nothing
+		// always call
 	case NZ:
 		if c.checkFlag(FlagZ) {
 			return 12
@@ -122,8 +128,8 @@ func (c *Cpu) callIm(condition jumpCondition) uint8 {
 		panic("invalid condition")
 	}
 
-	c.pushWord(c.pc + 3)
-	c.pc = c.currentWord()
+	c.pushWord(c.pc)
+	c.pc = target
 
 	return 24
 }

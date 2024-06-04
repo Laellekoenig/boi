@@ -16,13 +16,6 @@ func (n *notImplemented) Execute(c *Cpu) uint8 {
 	panic(fmt.Sprintf("instruction %02x not implemented", n.opcode))
 }
 
-type nop struct{}
-
-func (n *nop) String() string { return "NOP" }
-func (n *nop) Execute(c *Cpu) uint8 {
-	return 4
-}
-
 func InstrucionFromByte(opcode byte) instruction {
 	switch opcode {
 	case 0x00:
@@ -53,6 +46,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &decC{}
 	case 0x0e:
 		return &ldCIm{}
+	case 0x10:
+		return &stop{}
 	case 0x11:
 		return &ldDEIm{}
 	case 0x12:
@@ -251,6 +246,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldDerefHLH{}
 	case 0x75:
 		return &ldDerefHLL{}
+	case 0x76:
+		return &halt{}
 	case 0x77:
 		return &ldDerefHLA{}
 	case 0x78:
@@ -325,6 +322,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldADerefOffsetIm{}
 	case 0xf2:
 		return &ldADerefOffsetC{}
+	case 0xf3:
+		return &di{}
 	case 0xf7:
 		return &rst30h{}
 	case 0xf9:

@@ -14,24 +14,25 @@ func (c *Cpu) incReg(t registerType) {
 	oldVal := c.readRegister(t)
 	c.writeRegister(oldVal+1, t)
 
-	c.setFlag(FlagH, doesByteAddHalfCarry(oldVal, 1))
 	c.setFlag(FlagZ, oldVal == 0xff)
 	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, doesByteAddHalfCarry(oldVal, 1))
 }
 
 func (c *Cpu) decReg(t registerType) {
 	oldVal := c.readRegister(t)
 	c.writeRegister(oldVal-1, t)
 
-	c.setFlag(FlagH, doesByteSubHalfCarry(oldVal, 1))
 	c.setFlag(FlagZ, oldVal == 1)
 	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(oldVal, 1))
 }
 
 func (c *Cpu) addRegsRegs(dst, src doubleRegisterType) {
 	a := c.readDoubleRegister(dst)
 	b := c.readDoubleRegister(src)
 	c.writeDoubleRegister(a+b, dst)
+
 	c.setFlag(FlagN, false)
 	c.setFlag(FlagH, doesWordAddHalfCarry(a, b))
 	c.setFlag(FlagC, doesWordAddCarry(a, b))
@@ -39,18 +40,32 @@ func (c *Cpu) addRegsRegs(dst, src doubleRegisterType) {
 
 func (c *Cpu) daa() {
 	a := c.readRegister(RegA)
-	adjust := byte(0)
-	if c.checkFlag(FlagH) || (!c.checkFlag(FlagN) && (a&0xf) > 9) {
-		adjust |= 0x6
+	carry := c.checkFlag(FlagC)
+
+	if !c.checkFlag(FlagN) {
+		if c.checkFlag(FlagC) || a > 0x99 {
+			a += 0x60
+			c.setFlag(FlagC, true)
+		}
+
+		if c.checkFlag(FlagH) || (a&0x0f) > 0x09 {
+			a += 0x06
+		}
+
+	} else {
+		if c.checkFlag(FlagC) {
+			a -= 0x60
+		}
+
+		if c.checkFlag(FlagH) {
+			a -= 0x06
+		}
 	}
-	if c.checkFlag(FlagC) || (!c.checkFlag(FlagN) && a > 0x99) {
-		adjust |= 0x60
-		c.setFlag(FlagC, true)
-	}
-	a += adjust
 	c.writeRegister(a, RegA)
+
 	c.setFlag(FlagZ, a == 0)
 	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, carry || (!c.checkFlag(FlagN) && a > 0x99))
 }
 
 func (c *Cpu) cpl() {
