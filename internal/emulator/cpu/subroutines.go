@@ -209,3 +209,59 @@ func (r *rst38h) String() string { return "RST 38h" }
 func (r *rst38h) Execute(cpu *Cpu) uint8 {
 	return cpu.rst(0x0038)
 }
+
+type popBC struct{}
+
+func (p *popBC) String() string { return "POP BC" }
+func (p *popBC) Execute(c *Cpu) uint8 {
+	return c.popRegs(RegsBC)
+}
+
+type popDE struct{}
+
+func (p *popDE) String() string { return "POP DE" }
+func (p *popDE) Execute(c *Cpu) uint8 {
+	return c.popRegs(RegsDE)
+}
+
+type popHL struct{}
+
+func (p *popHL) String() string { return "POP HL" }
+func (p *popHL) Execute(c *Cpu) uint8 {
+	return c.popRegs(RegsHL)
+}
+
+type popAF struct{}
+
+func (p *popAF) String() string { return "POP AF" }
+func (p *popAF) Execute(c *Cpu) uint8 {
+	return c.popRegs(RegsAF)
+}
+
+type pushBC struct{}
+
+func (p *pushBC) String() string { return "PUSH BC" }
+func (p *pushBC) Execute(c *Cpu) uint8 {
+	return c.pushRegs(RegsBC)
+}
+
+type pushDE struct{}
+
+func (p *pushDE) String() string { return "PUSH DE" }
+func (p *pushDE) Execute(c *Cpu) uint8 {
+	return c.pushRegs(RegsDE)
+}
+
+type pushHL struct{}
+
+func (p *pushHL) String() string { return "PUSH HL" }
+func (p *pushHL) Execute(c *Cpu) uint8 {
+	return c.pushRegs(RegsHL)
+}
+
+type pushAF struct{}
+
+func (p *pushAF) String() string { return "PUSH AF" }
+func (p *pushAF) Execute(c *Cpu) uint8 {
+	return c.pushRegs(RegsAF)
+}

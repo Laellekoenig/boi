@@ -266,14 +266,52 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldADerefHL{}
 	case 0x7f:
 		return &ldAA{}
+	case 0xa8:
+		return &xorAB{}
+	case 0xa9:
+		return &xorAC{}
+	case 0xaa:
+		return &xorAD{}
+	case 0xab:
+		return &xorAE{}
+	case 0xac:
+		return &xorAH{}
+	case 0xad:
+		return &xorAL{}
+	case 0xae:
+		return &xorADerefHL{}
+	case 0xaf:
+		return &xorAA{}
+	case 0xb0:
+		return &orAB{}
+	case 0xb1:
+		return &orAC{}
+	case 0xb2:
+		return &orAD{}
+	case 0xb3:
+		return &orAE{}
+	case 0xb4:
+		return &orAH{}
+	case 0xb5:
+		return &orAL{}
+	case 0xb6:
+		return &orADerefHL{}
+	case 0xb7:
+		return &orAA{}
 	case 0xc0:
 		return &retNZ{}
+	case 0xc1:
+		return &popBC{}
 	case 0xc2:
 		return &jpNZIm{}
 	case 0xc3:
 		return &jpIm{}
 	case 0xc4:
 		return &callNZIm{}
+	case 0xc5:
+		return &pushBC{}
+	case 0xc6:
+		return &addAIm{}
 	case 0xc7:
 		return &rst00h{}
 	case 0xc8:
@@ -290,10 +328,14 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &rst08h{}
 	case 0xd0:
 		return &retNC{}
+	case 0xd1:
+		return &popDE{}
 	case 0xd2:
 		return &jpNCIm{}
 	case 0xd4:
 		return &callNCIm{}
+	case 0xd5:
+		return &pushDE{}
 	case 0xd7:
 		return &rst10h{}
 	case 0xd8:
@@ -308,22 +350,34 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &rst18h{}
 	case 0xe0:
 		return &ldDerefOffsetImA{}
+	case 0xe1:
+		return &popHL{}
 	case 0xe2:
 		return &ldDerefOffsetCA{}
+	case 0xe5:
+		return &pushHL{}
+	case 0xe6:
+		return &andAIm{}
 	case 0xe7:
 		return &rst20h{}
 	case 0xe9:
 		return &jpHL{}
 	case 0xea:
 		return &ldDerefImA{}
+	case 0xee:
+		return &xorAIm{}
 	case 0xef:
 		return &rst28h{}
 	case 0xf0:
 		return &ldADerefOffsetIm{}
+	case 0xf1:
+		return &popAF{}
 	case 0xf2:
 		return &ldADerefOffsetC{}
 	case 0xf3:
 		return &di{}
+	case 0xf5:
+		return &pushAF{}
 	case 0xf7:
 		return &rst30h{}
 	case 0xf9:
@@ -332,6 +386,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldADerefIm{}
 	case 0xfb:
 		return &ei{}
+	case 0xfe:
+		return &cpAIm{}
 	case 0xff:
 		return &rst38h{}
 	}

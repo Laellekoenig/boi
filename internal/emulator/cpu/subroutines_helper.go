@@ -150,3 +150,15 @@ func (c *Cpu) jpHL() uint8 {
 	c.pc = c.readDoubleRegister(RegsHL)
 	return 4
 }
+
+func (c *Cpu) pushRegs(t doubleRegisterType) uint8 {
+	w := c.readDoubleRegister(t)
+	c.pushWord(w)
+	return 16
+}
+
+func (c *Cpu) popRegs(t doubleRegisterType) uint8 {
+	w := c.popWord()
+	c.writeDoubleRegister(w, t)
+	return 12
+}

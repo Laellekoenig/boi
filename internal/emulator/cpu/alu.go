@@ -259,3 +259,143 @@ func (i *ccf) Execute(c *Cpu) uint8 {
 	c.setFlag(FlagC, !c.checkFlag(FlagC))
 	return 4
 }
+
+type orAB struct{}
+
+func (i *orAB) String() string { return "OR A, B" }
+func (i *orAB) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegB)
+}
+
+type orAC struct{}
+
+func (i *orAC) String() string { return "OR A, C" }
+func (i *orAC) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegC)
+}
+
+type orAD struct{}
+
+func (i *orAD) String() string { return "OR A, D" }
+func (i *orAD) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegD)
+}
+
+type orAE struct{}
+
+func (i *orAE) String() string { return "OR A, E" }
+func (i *orAE) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegE)
+}
+
+type orAH struct{}
+
+func (i *orAH) String() string { return "OR A, H" }
+func (i *orAH) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegH)
+}
+
+type orAL struct{}
+
+func (i *orAL) String() string { return "OR A, L" }
+func (i *orAL) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegL)
+}
+
+type orADerefHL struct{}
+
+func (i *orADerefHL) String() string { return "OR A, (HL)" }
+func (i *orADerefHL) Execute(c *Cpu) uint8 {
+	return c.orADerefHL()
+}
+
+type orAA struct{}
+
+func (i *orAA) String() string { return "OR A, A" }
+func (i *orAA) Execute(c *Cpu) uint8 {
+	return c.orRegReg(RegA, RegA)
+}
+
+type cpAIm struct{}
+
+func (i *cpAIm) String() string { return "CP A, u8" }
+func (i *cpAIm) Execute(c *Cpu) uint8 {
+	return c.cpAIm()
+}
+
+type andAIm struct{}
+
+func (i *andAIm) String() string { return "AND A, u8" }
+func (i *andAIm) Execute(c *Cpu) uint8 {
+	return c.andAIm()
+}
+
+type xorAB struct{}
+
+func (i *xorAB) String() string { return "XOR A, B" }
+func (i *xorAB) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegB)
+}
+
+type xorAC struct{}
+
+func (i *xorAC) String() string { return "XOR A, C" }
+func (i *xorAC) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegC)
+}
+
+type xorAD struct{}
+
+func (i *xorAD) String() string { return "XOR A, D" }
+func (i *xorAD) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegD)
+}
+
+type xorAE struct{}
+
+func (i *xorAE) String() string { return "XOR A, E" }
+func (i *xorAE) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegE)
+}
+
+type xorAH struct{}
+
+func (i *xorAH) String() string { return "XOR A, H" }
+func (i *xorAH) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegH)
+}
+
+type xorAL struct{}
+
+func (i *xorAL) String() string { return "XOR A, L" }
+func (i *xorAL) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegL)
+}
+
+type xorADerefHL struct{}
+
+func (i *xorADerefHL) String() string { return "XOR A, (HL)" }
+func (i *xorADerefHL) Execute(c *Cpu) uint8 {
+	return c.xorADerefHL()
+}
+
+type xorAA struct{}
+
+func (i *xorAA) String() string { return "XOR A, A" }
+func (i *xorAA) Execute(c *Cpu) uint8 {
+	return c.xorRegReg(RegA, RegA)
+}
+
+type xorAIm struct{}
+
+func (i *xorAIm) String() string { return "XOR A, u8" }
+func (i *xorAIm) Execute(c *Cpu) uint8 {
+	return c.xorAIm()
+}
+
+type addAIm struct{}
+
+func (i *addAIm) String() string { return "ADD A, u8" }
+func (i *addAIm) Execute(c *Cpu) uint8 {
+	return c.addAIm()
+}

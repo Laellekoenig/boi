@@ -102,3 +102,108 @@ func (c *Cpu) addHLSP() {
 	c.setFlag(FlagH, doesWordAddHalfCarry(a, b))
 	c.setFlag(FlagC, doesWordAddCarry(a, b))
 }
+
+func (c *Cpu) orRegReg(a, b registerType) uint8 {
+	res := c.readRegister(a) | c.readRegister(b)
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
+
+	return 4
+}
+
+func (c *Cpu) orADerefHL() uint8 {
+	res := c.readRegister(RegA) | c.bus.ByteAt(c.readDoubleRegister(RegsHL))
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) cpAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	c.setFlag(FlagZ, valA-im == 0)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(valA, im))
+	c.setFlag(FlagC, doesByteSubCarry(valA, im))
+
+	return 8
+}
+
+func (c *Cpu) andAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	res := valA & im
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, true)
+	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) xorRegReg(a, b registerType) uint8 {
+	res := c.readRegister(a) ^ c.readRegister(b)
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
+
+	return 4
+}
+
+func (c *Cpu) xorADerefHL() uint8 {
+	res := c.readRegister(RegA) ^ c.bus.ByteAt(c.readDoubleRegister(RegsHL))
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) xorAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	res := valA ^ im
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) addAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	res := valA + im
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, doesByteAddHalfCarry(valA, im))
+	c.setFlag(FlagC, doesByteAddCarry(valA, im))
+
+	return 8
+}
