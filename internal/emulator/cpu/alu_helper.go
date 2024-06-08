@@ -313,6 +313,36 @@ func (c *Cpu) adcADerefHL() uint8 {
 	return 8
 }
 
+func (c *Cpu) adcAIm() uint8 {
+	aVal := c.readRegister(RegA)
+	im := c.currentByte()
+
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+
+	res := aVal + im + carry
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+
+	halfCarry := doesByteAddHalfCarry(aVal, im)
+	if !halfCarry {
+		halfCarry = doesByteAddHalfCarry(aVal+im, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteAddCarry(aVal, im)
+	if !fullCarry {
+		fullCarry = doesByteAddCarry(aVal+im, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
+
+	return 8
+}
+
 func (c *Cpu) subRegReg(a, b registerType) uint8 {
 	aVal := c.readRegister(a)
 	bVal := c.readRegister(b)

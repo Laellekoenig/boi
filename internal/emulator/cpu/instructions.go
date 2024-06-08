@@ -430,6 +430,8 @@ func InstrucionFromByte(opcode, next byte) instruction {
 		return &callZIm{}
 	case 0xcd:
 		return &callIm{}
+	case 0xce:
+		return &adcAIm{}
 	case 0xcf:
 		return &rst08h{}
 	case 0xd0:

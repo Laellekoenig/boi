@@ -1,6 +1,10 @@
 package memory
 
-import "encoding/binary"
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+)
 
 type word = uint16
 
@@ -12,8 +16,9 @@ const (
 )
 
 type Memory struct {
-	data [0xffff + 1]byte
-	rom  []byte
+	data      [0xffff + 1]byte
+	rom       []byte
+	serialOut bytes.Buffer
 }
 
 func NewMemory(rom []byte) *Memory {
@@ -133,6 +138,11 @@ func (m *Memory) WordAt(addr word) word {
 }
 
 func (m *Memory) WriteByteAt(b byte, addr word) {
+	if addr == 0xff01 {
+		m.serialOut.WriteByte(b)
+		fmt.Printf("%c", b)
+	}
+
 	m.data[addr] = b
 }
 
@@ -142,4 +152,8 @@ func (m *Memory) WriteWordAt(w, addr word) {
 
 func (m *Memory) Reset() {
 	m.mapMemory()
+}
+
+func (m *Memory) GetSerial() string {
+	return m.serialOut.String()
 }

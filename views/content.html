@@ -1,6 +1,8 @@
 {{ block "content" . }}
   <div id="content">
     <p>Loaded ROM: {{ romName . }}</p>
+    <p>Serial out:</p>
+    <p>{{ serial . }}</p>
     <p>PC = ${{ pc . }}</p>
     <p>SP = ${{ sp . }}</p>
     <table>

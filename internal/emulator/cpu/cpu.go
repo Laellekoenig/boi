@@ -1,6 +1,6 @@
 package cpu
 
-import "fmt"
+//import "fmt"
 
 type word = uint16
 
@@ -61,8 +61,12 @@ func (c *Cpu) currentByte() byte {
 	return b
 }
 
-func (c *Cpu) peakByte() byte {
+func (c *Cpu) peakCurrentByte() byte {
 	return c.bus.ByteAt(c.pc)
+}
+
+func (c *Cpu) peakNextByte() byte {
+	return c.bus.ByteAt(c.pc + 1)
 }
 
 func (c *Cpu) currentWord() word {
@@ -80,11 +84,11 @@ func (c *Cpu) dereferenceRegister(r doubleRegisterType) byte {
 }
 
 func (c *Cpu) ExecuteStep() {
-	opcode := c.peakByte()
-	next := c.peakByte()
+	opcode := c.peakCurrentByte()
+	next := c.peakCurrentByte()
 	instruction := InstrucionFromByte(opcode, next)
 
-	c.PastOps = append(c.PastOps, fmt.Sprintf("%d | %-20s: PC=%04x SP=%04x A=%02x F=%02x B=%02x C=%02x D=%02x E=%02x H=%02x L=%02x", c.counter, instruction.String(), c.pc, c.sp, c.a, c.f, c.b, c.c, c.d, c.e, c.h, c.l))
+	//c.PastOps = append(c.PastOps, fmt.Sprintf("%d | %-20s: PC=%04x SP=%04x A=%02x F=%02x B=%02x C=%02x D=%02x E=%02x H=%02x L=%02x", c.counter, instruction.String(), c.pc, c.sp, c.a, c.f, c.b, c.c, c.d, c.e, c.h, c.l))
 	c.pc += 1
 	c.counter += 1
 
@@ -94,17 +98,21 @@ func (c *Cpu) ExecuteStep() {
 
 func (c *Cpu) ContinueUnimpl() {
 	for {
-		opcode := c.peakByte()
-		next := c.peakByte()
+		opcode := c.peakCurrentByte()
+		next := c.peakNextByte()
 		instruction := InstrucionFromByte(opcode, next)
 
 		if instruction.String() == "Not implemented" {
 			break
 		}
 
-		c.PastOps = append(c.PastOps, fmt.Sprintf("%d | %-20s: PC=%04x SP=%04x A=%02x F=%02x B=%02x C=%02x D=%02x E=%02x H=%02x L=%02x", c.counter, instruction.String(), c.pc, c.sp, c.a, c.f, c.b, c.c, c.d, c.e, c.h, c.l))
+		//c.PastOps = append(c.PastOps, fmt.Sprintf("%d | %-20s: PC=%04x SP=%04x A=%02x F=%02x B=%02x C=%02x D=%02x E=%02x H=%02x L=%02x", c.counter, instruction.String(), c.pc, c.sp, c.a, c.f, c.b, c.c, c.d, c.e, c.h, c.l))
 		c.pc += 1
 		c.counter += 1
+
+		if opcode == 0xcb {
+			c.pc += 1
+		}
 
 		// TODO: handle timing
 		_ = instruction.Execute(c)

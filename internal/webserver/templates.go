@@ -58,6 +58,9 @@ func newTemplate() *Template {
 			"pastOps": func(e *emulator.Emulator) interface{} {
 				return e.Cpu.PastOps
 			},
+			"serial": func(e *emulator.Emulator) interface{} {
+				return e.Memory.GetSerial()
+			},
 		}).ParseGlob("views/*.html")),
 	}
 }

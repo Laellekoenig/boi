@@ -756,3 +756,10 @@ func (i *orAIm) String() string { return "OR A, u8" }
 func (i *orAIm) Execute(c *Cpu) uint8 {
 	return c.orAIm()
 }
+
+type adcAIm struct{}
+
+func (i *adcAIm) String() string { return "ADC A, u8" }
+func (i *adcAIm) Execute(c *Cpu) uint8 {
+	return c.adcAIm()
+}
