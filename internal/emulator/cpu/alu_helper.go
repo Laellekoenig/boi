@@ -38,6 +38,20 @@ func (c *Cpu) addRegsRegs(dst, src doubleRegisterType) {
 	c.setFlag(FlagC, doesWordAddCarry(a, b))
 }
 
+func (c *Cpu) addRegReg(a, b registerType) uint8 {
+	aVal := c.readRegister(a)
+	bVal := c.readRegister(b)
+	res := aVal + bVal
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, doesByteAddHalfCarry(aVal, bVal))
+	c.setFlag(FlagC, doesByteAddCarry(aVal, bVal))
+
+	return 4
+}
+
 func (c *Cpu) daa() {
 	a := c.readRegister(RegA)
 	carry := c.checkFlag(FlagC)
@@ -204,6 +218,270 @@ func (c *Cpu) addAIm() uint8 {
 	c.setFlag(FlagN, false)
 	c.setFlag(FlagH, doesByteAddHalfCarry(valA, im))
 	c.setFlag(FlagC, doesByteAddCarry(valA, im))
+
+	return 8
+}
+
+func (c *Cpu) subAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	res := valA - im
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(valA, im))
+	c.setFlag(FlagC, doesByteSubCarry(valA, im))
+
+	return 8
+}
+
+func (c *Cpu) addADerefHL() uint8 {
+	addr := c.readDoubleRegister(RegsHL)
+	b := c.bus.ByteAt(addr)
+	a := c.readRegister(RegA)
+	res := a + b
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, doesByteAddHalfCarry(a, b))
+	c.setFlag(FlagC, doesByteAddCarry(a, b))
+
+	return 8
+}
+
+func (c *Cpu) adcRegReg(a, b registerType) uint8 {
+	aVal := c.readRegister(a)
+	bVal := c.readRegister(b)
+
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+
+	res := aVal + bVal + carry
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+
+	halfCarry := doesByteAddHalfCarry(aVal, bVal)
+	if !halfCarry {
+		halfCarry = doesByteAddHalfCarry(aVal+bVal, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteAddCarry(aVal, bVal)
+	if !fullCarry {
+		fullCarry = doesByteAddCarry(aVal+bVal, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
+
+	return 4
+}
+
+func (c *Cpu) adcADerefHL() uint8 {
+	aVal := c.readRegister(RegA)
+	addr := c.readDoubleRegister(RegsHL)
+	bVal := c.bus.ByteAt(addr)
+
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+
+	res := aVal + bVal + carry
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+
+	halfCarry := doesByteAddHalfCarry(aVal, bVal)
+	if !halfCarry {
+		halfCarry = doesByteAddHalfCarry(aVal+bVal, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteAddCarry(aVal, bVal)
+	if !fullCarry {
+		fullCarry = doesByteAddCarry(aVal+bVal, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
+
+	return 8
+}
+
+func (c *Cpu) subRegReg(a, b registerType) uint8 {
+	aVal := c.readRegister(a)
+	bVal := c.readRegister(b)
+	res := aVal - bVal
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(aVal, bVal))
+	c.setFlag(FlagC, doesByteSubCarry(aVal, bVal))
+
+	return 4
+}
+
+func (c *Cpu) subADerefHL() uint8 {
+	aVal := c.readRegister(RegA)
+	addr := c.readDoubleRegister(RegsHL)
+	bVal := c.bus.ByteAt(addr)
+	res := aVal - bVal
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(aVal, bVal))
+	c.setFlag(FlagC, doesByteSubCarry(aVal, bVal))
+
+	return 8
+}
+
+func (c *Cpu) sbcRegReg(a, b registerType) uint8 {
+	aVal := c.readRegister(a)
+	bVal := c.readRegister(b)
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+	res := aVal - bVal - carry
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+
+	halfCarry := doesByteSubHalfCarry(aVal, bVal)
+	if !halfCarry {
+		halfCarry = doesByteSubHalfCarry(aVal-bVal, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteSubCarry(aVal, bVal)
+	if !fullCarry {
+		fullCarry = doesByteSubCarry(aVal-bVal, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
+
+	return 4
+}
+
+func (c *Cpu) sbcADerefHL() uint8 {
+	aVal := c.readRegister(RegA)
+	addr := c.readDoubleRegister(RegsHL)
+	bVal := c.bus.ByteAt(addr)
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+	res := aVal - bVal - carry
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+
+	halfCarry := doesByteSubHalfCarry(aVal, bVal)
+	if !halfCarry {
+		halfCarry = doesByteSubHalfCarry(aVal-bVal, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteSubCarry(aVal, bVal)
+	if !fullCarry {
+		fullCarry = doesByteSubCarry(aVal-bVal, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
+
+	return 8
+}
+
+func (c *Cpu) andRegReg(a, b registerType) uint8 {
+	res := c.readRegister(a) & c.readRegister(b)
+	c.writeRegister(res, a)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, true)
+	c.setFlag(FlagC, false)
+
+	return 4
+}
+
+func (c *Cpu) andADerefHL() uint8 {
+	addr := c.readDoubleRegister(RegsHL)
+	res := c.readRegister(RegA) & c.bus.ByteAt(addr)
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, true)
+	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) cpRegReg(a, b registerType) uint8 {
+	valA := c.readRegister(a)
+	valB := c.readRegister(b)
+
+	c.setFlag(FlagZ, valA == valB)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(valA, valB))
+	c.setFlag(FlagC, doesByteSubCarry(valA, valB))
+
+	return 4
+}
+
+func (c *Cpu) cpADerefHL() uint8 {
+	valA := c.readRegister(RegA)
+	addr := c.readDoubleRegister(RegsHL)
+	valB := c.bus.ByteAt(addr)
+
+	c.setFlag(FlagZ, valA == valB)
+	c.setFlag(FlagN, true)
+	c.setFlag(FlagH, doesByteSubHalfCarry(valA, valB))
+	c.setFlag(FlagC, doesByteSubCarry(valA, valB))
+
+	return 8
+}
+
+func (c *Cpu) addSPIm() uint8 {
+	im := int32(c.currentByte())
+
+	var imCast word
+	if im >= 0 {
+		imCast = word(im)
+		c.sp += imCast
+		c.setFlag(FlagC, doesWordAddCarry(c.sp, imCast))
+		c.setFlag(FlagH, doesWordAddHalfCarry(c.sp, imCast))
+	} else {
+		imCast = word(-im)
+		c.sp -= imCast
+		c.setFlag(FlagC, doesWordSubCarry(c.sp, imCast))
+		c.setFlag(FlagH, doesWordSubHalfCarry(c.sp, imCast))
+	}
+
+	c.setFlag(FlagZ, false)
+	c.setFlag(FlagN, false)
+
+	return 16
+}
+
+func (c *Cpu) orAIm() uint8 {
+	valA := c.readRegister(RegA)
+	im := c.currentByte()
+
+	res := valA | im
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, false)
+	c.setFlag(FlagC, false)
 
 	return 8
 }

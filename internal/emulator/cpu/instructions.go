@@ -16,7 +16,7 @@ func (n *notImplemented) Execute(c *Cpu) uint8 {
 	panic(fmt.Sprintf("instruction %02x not implemented", n.opcode))
 }
 
-func InstrucionFromByte(opcode byte) instruction {
+func InstrucionFromByte(opcode, next byte) instruction {
 	switch opcode {
 	case 0x00:
 		return &nop{}
@@ -32,6 +32,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &decB{}
 	case 0x06:
 		return &ldBIm{}
+	case 0x07:
+		return &rlca{}
 	case 0x08:
 		return &ldDerefImSP{}
 	case 0x09:
@@ -46,6 +48,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &decC{}
 	case 0x0e:
 		return &ldCIm{}
+	case 0x0f:
+		return &rrca{}
 	case 0x10:
 		return &stop{}
 	case 0x11:
@@ -60,6 +64,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &decD{}
 	case 0x16:
 		return &ldDIm{}
+	case 0x17:
+		return &rla{}
 	case 0x18:
 		return &jrIm{}
 	case 0x19:
@@ -74,6 +80,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &decE{}
 	case 0x1e:
 		return &ldEIm{}
+	case 0x1f:
+		return &rra{}
 	case 0x20:
 		return &jrNZIm{}
 	case 0x21:
@@ -266,6 +274,86 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ldADerefHL{}
 	case 0x7f:
 		return &ldAA{}
+	case 0x80:
+		return &addAB{}
+	case 0x81:
+		return &addAC{}
+	case 0x82:
+		return &addAD{}
+	case 0x83:
+		return &addAE{}
+	case 0x84:
+		return &addAH{}
+	case 0x85:
+		return &addAL{}
+	case 0x86:
+		return &addADerefHL{}
+	case 0x87:
+		return &addAA{}
+	case 0x88:
+		return &adcAB{}
+	case 0x89:
+		return &adcAC{}
+	case 0x8a:
+		return &adcAD{}
+	case 0x8b:
+		return &adcAE{}
+	case 0x8c:
+		return &adcAH{}
+	case 0x8d:
+		return &adcAL{}
+	case 0x8e:
+		return &adcADerefHL{}
+	case 0x8f:
+		return &adcAA{}
+	case 0x90:
+		return &subAB{}
+	case 0x91:
+		return &subAC{}
+	case 0x92:
+		return &subAD{}
+	case 0x93:
+		return &subAE{}
+	case 0x94:
+		return &subAH{}
+	case 0x95:
+		return &subAL{}
+	case 0x96:
+		return &subADerefHL{}
+	case 0x97:
+		return &subAA{}
+	case 0x98:
+		return &sbcAB{}
+	case 0x99:
+		return &sbcAC{}
+	case 0x9a:
+		return &sbcAD{}
+	case 0x9b:
+		return &sbcAE{}
+	case 0x9c:
+		return &sbcAH{}
+	case 0x9d:
+		return &sbcAL{}
+	case 0x9e:
+		return &sbcADerefHL{}
+	case 0x9f:
+		return &sbcAA{}
+	case 0xa0:
+		return &andAB{}
+	case 0xa1:
+		return &andAC{}
+	case 0xa2:
+		return &andAD{}
+	case 0xa3:
+		return &andAE{}
+	case 0xa4:
+		return &andAH{}
+	case 0xa5:
+		return &andAL{}
+	case 0xa6:
+		return &andADerefHL{}
+	case 0xa7:
+		return &andAA{}
 	case 0xa8:
 		return &xorAB{}
 	case 0xa9:
@@ -298,6 +386,22 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &orADerefHL{}
 	case 0xb7:
 		return &orAA{}
+	case 0xb8:
+		return &cpAB{}
+	case 0xb9:
+		return &cpAC{}
+	case 0xba:
+		return &cpAD{}
+	case 0xbb:
+		return &cpAE{}
+	case 0xbc:
+		return &cpAH{}
+	case 0xbd:
+		return &cpAL{}
+	case 0xbe:
+		return &cpADerefHL{}
+	case 0xbf:
+		return &cpAA{}
 	case 0xc0:
 		return &retNZ{}
 	case 0xc1:
@@ -320,6 +424,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &ret{}
 	case 0xca:
 		return &jpZIm{}
+	case 0xcb:
+		return PrefixInstrucionFromByte(next)
 	case 0xcc:
 		return &callZIm{}
 	case 0xcd:
@@ -336,6 +442,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &callNCIm{}
 	case 0xd5:
 		return &pushDE{}
+	case 0xd6:
+		return &subAIm{}
 	case 0xd7:
 		return &rst10h{}
 	case 0xd8:
@@ -360,6 +468,8 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &andAIm{}
 	case 0xe7:
 		return &rst20h{}
+	case 0xe8:
+		return &addSPIm{}
 	case 0xe9:
 		return &jpHL{}
 	case 0xea:
@@ -378,8 +488,12 @@ func InstrucionFromByte(opcode byte) instruction {
 		return &di{}
 	case 0xf5:
 		return &pushAF{}
+	case 0xf6:
+		return &orAIm{}
 	case 0xf7:
 		return &rst30h{}
+	case 0xf8:
+		return &ldHLSPIm{}
 	case 0xf9:
 		return &ldSPHL{}
 	case 0xfa:

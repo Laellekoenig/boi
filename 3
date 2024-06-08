@@ -404,355 +404,103 @@ type subAIm struct{}
 
 func (i *subAIm) String() string { return "SUB A, u8" }
 func (i *subAIm) Execute(c *Cpu) uint8 {
-	return c.subAIm()
+  return c.subAIm()
 }
 
 type addAB struct{}
 
 func (i *addAB) String() string { return "ADD A, B" }
 func (i *addAB) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegB)
+  return c.addRegReg(RegA, RegB)
 }
 
 type addAC struct{}
 
 func (i *addAC) String() string { return "ADD A, C" }
 func (i *addAC) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegC)
+  return c.addRegReg(RegA, RegC)
 }
 
 type addAD struct{}
 
 func (i *addAD) String() string { return "ADD A, D" }
 func (i *addAD) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegD)
+  return c.addRegReg(RegA, RegD)
 }
 
 type addAE struct{}
 
 func (i *addAE) String() string { return "ADD A, E" }
 func (i *addAE) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegE)
+  return c.addRegReg(RegA, RegE)
 }
 
 type addAH struct{}
 
 func (i *addAH) String() string { return "ADD A, H" }
 func (i *addAH) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegH)
+  return c.addRegReg(RegA, RegH)
 }
 
 type addAL struct{}
 
 func (i *addAL) String() string { return "ADD A, L" }
 func (i *addAL) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegL)
+  return c.addRegReg(RegA, RegL)
 }
 
 type addADerefHL struct{}
 
 func (i *addADerefHL) String() string { return "ADD A, (HL)" }
 func (i *addADerefHL) Execute(c *Cpu) uint8 {
-	return c.addADerefHL()
+  return c.addADerefHL()
 }
 
 type addAA struct{}
 
 func (i *addAA) String() string { return "ADD A, A" }
 func (i *addAA) Execute(c *Cpu) uint8 {
-	return c.addRegReg(RegA, RegA)
+  return c.addRegReg(RegA, RegA)
 }
 
 type adcAB struct{}
 
 func (i *adcAB) String() string { return "ADC A, B" }
 func (i *adcAB) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegB)
+  return c.adcRegReg(RegA, RegB)
 }
 
 type adcAC struct{}
 
 func (i *adcAC) String() string { return "ADC A, C" }
 func (i *adcAC) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegC)
+  return c.adcRegReg(RegA, RegC)
 }
 
 type adcAD struct{}
 
 func (i *adcAD) String() string { return "ADC A, D" }
 func (i *adcAD) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegD)
+  return c.adcRegReg(RegA, RegD)
 }
 
 type adcAE struct{}
 
 func (i *adcAE) String() string { return "ADC A, E" }
 func (i *adcAE) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegE)
+  return c.adcRegReg(RegA, RegE)
 }
 
 type adcAH struct{}
 
 func (i *adcAH) String() string { return "ADC A, H" }
 func (i *adcAH) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegH)
+  return c.adcRegReg(RegA, RegH)
 }
 
 type adcAL struct{}
 
 func (i *adcAL) String() string { return "ADC A, L" }
 func (i *adcAL) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegL)
-}
-
-type adcADerefHL struct{}
-
-func (i *adcADerefHL) String() string { return "ADC A, (HL)" }
-func (i *adcADerefHL) Execute(c *Cpu) uint8 {
-	return c.adcADerefHL()
-}
-
-type adcAA struct{}
-
-func (i *adcAA) String() string { return "ADC A, A" }
-func (i *adcAA) Execute(c *Cpu) uint8 {
-	return c.adcRegReg(RegA, RegA)
-}
-
-type subAB struct{}
-
-func (i *subAB) String() string { return "SUB A, B" }
-func (i *subAB) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegB)
-}
-
-type subAC struct{}
-
-func (i *subAC) String() string { return "SUB A, C" }
-func (i *subAC) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegC)
-}
-
-type subAD struct{}
-
-func (i *subAD) String() string { return "SUB A, D" }
-func (i *subAD) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegD)
-}
-
-type subAE struct{}
-
-func (i *subAE) String() string { return "SUB A, E" }
-func (i *subAE) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegE)
-}
-
-type subAH struct{}
-
-func (i *subAH) String() string { return "SUB A, H" }
-func (i *subAH) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegH)
-}
-
-type subAL struct{}
-
-func (i *subAL) String() string { return "SUB A, L" }
-func (i *subAL) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegL)
-}
-
-type subADerefHL struct{}
-
-func (i *subADerefHL) String() string { return "SUB A, (HL)" }
-func (i *subADerefHL) Execute(c *Cpu) uint8 {
-	return c.subADerefHL()
-}
-
-type subAA struct{}
-
-func (i *subAA) String() string { return "SUB A, A" }
-func (i *subAA) Execute(c *Cpu) uint8 {
-	return c.subRegReg(RegA, RegA)
-}
-
-type sbcAB struct{}
-
-func (i *sbcAB) String() string { return "SBC A, B" }
-func (i *sbcAB) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegB)
-}
-
-type sbcAC struct{}
-
-func (i *sbcAC) String() string { return "SBC A, C" }
-func (i *sbcAC) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegC)
-}
-
-type sbcAD struct{}
-
-func (i *sbcAD) String() string { return "SBC A, D" }
-func (i *sbcAD) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegD)
-}
-
-type sbcAE struct{}
-
-func (i *sbcAE) String() string { return "SBC A, E" }
-func (i *sbcAE) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegE)
-}
-
-type sbcAH struct{}
-
-func (i *sbcAH) String() string { return "SBC A, H" }
-func (i *sbcAH) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegH)
-}
-
-type sbcAL struct{}
-
-func (i *sbcAL) String() string { return "SBC A, L" }
-func (i *sbcAL) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegL)
-}
-
-type sbcADerefHL struct{}
-
-func (i *sbcADerefHL) String() string { return "SBC A, (HL)" }
-func (i *sbcADerefHL) Execute(c *Cpu) uint8 {
-	return c.sbcADerefHL()
-}
-
-type sbcAA struct{}
-
-func (i *sbcAA) String() string { return "SBC A, A" }
-func (i *sbcAA) Execute(c *Cpu) uint8 {
-	return c.sbcRegReg(RegA, RegA)
-}
-
-type andAB struct{}
-
-func (i *andAB) String() string { return "AND A, B" }
-func (i *andAB) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegB)
-}
-
-type andAC struct{}
-
-func (i *andAC) String() string { return "AND A, C" }
-func (i *andAC) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegC)
-}
-
-type andAD struct{}
-
-func (i *andAD) String() string { return "AND A, D" }
-func (i *andAD) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegD)
-}
-
-type andAE struct{}
-
-func (i *andAE) String() string { return "AND A, E" }
-func (i *andAE) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegE)
-}
-
-type andAH struct{}
-
-func (i *andAH) String() string { return "AND A, H" }
-func (i *andAH) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegH)
-}
-
-type andAL struct{}
-
-func (i *andAL) String() string { return "AND A, L" }
-func (i *andAL) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegL)
-}
-
-type andADerefHL struct{}
-
-func (i *andADerefHL) String() string { return "AND A, (HL)" }
-func (i *andADerefHL) Execute(c *Cpu) uint8 {
-	return c.andADerefHL()
-}
-
-type andAA struct{}
-
-func (i *andAA) String() string { return "AND A, A" }
-func (i *andAA) Execute(c *Cpu) uint8 {
-	return c.andRegReg(RegA, RegA)
-}
-
-type cpAB struct{}
-
-func (i *cpAB) String() string { return "CP A, B" }
-func (i *cpAB) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegB)
-}
-
-type cpAC struct{}
-
-func (i *cpAC) String() string { return "CP A, C" }
-func (i *cpAC) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegC)
-}
-
-type cpAD struct{}
-
-func (i *cpAD) String() string { return "CP A, D" }
-func (i *cpAD) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegD)
-}
-
-type cpAE struct{}
-
-func (i *cpAE) String() string { return "CP A, E" }
-func (i *cpAE) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegE)
-}
-
-type cpAH struct{}
-
-func (i *cpAH) String() string { return "CP A, H" }
-func (i *cpAH) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegH)
-}
-
-type cpAL struct{}
-
-func (i *cpAL) String() string { return "CP A, L" }
-func (i *cpAL) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegL)
-}
-
-type cpADerefHL struct{}
-
-func (i *cpADerefHL) String() string { return "CP A, (HL)" }
-func (i *cpADerefHL) Execute(c *Cpu) uint8 {
-	return c.cpADerefHL()
-}
-
-type cpAA struct{}
-
-func (i *cpAA) String() string { return "CP A, A" }
-func (i *cpAA) Execute(c *Cpu) uint8 {
-	return c.cpRegReg(RegA, RegA)
-}
-
-type addSPIm struct{}
-
-func (i *addSPIm) String() string { return "ADD SP, i8" }
-func (i *addSPIm) Execute(c *Cpu) uint8 {
-	return c.addSPIm()
-}
-
-type orAIm struct{}
-
-func (i *orAIm) String() string { return "OR A, u8" }
-func (i *orAIm) Execute(c *Cpu) uint8 {
-	return c.orAIm()
+  return c.adcRegReg(RegA, RegL)
 }

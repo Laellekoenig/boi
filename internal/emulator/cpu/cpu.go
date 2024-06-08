@@ -81,7 +81,8 @@ func (c *Cpu) dereferenceRegister(r doubleRegisterType) byte {
 
 func (c *Cpu) ExecuteStep() {
 	opcode := c.peakByte()
-	instruction := InstrucionFromByte(opcode)
+	next := c.peakByte()
+	instruction := InstrucionFromByte(opcode, next)
 
 	c.PastOps = append(c.PastOps, fmt.Sprintf("%d | %-20s: PC=%04x SP=%04x A=%02x F=%02x B=%02x C=%02x D=%02x E=%02x H=%02x L=%02x", c.counter, instruction.String(), c.pc, c.sp, c.a, c.f, c.b, c.c, c.d, c.e, c.h, c.l))
 	c.pc += 1
@@ -94,7 +95,8 @@ func (c *Cpu) ExecuteStep() {
 func (c *Cpu) ContinueUnimpl() {
 	for {
 		opcode := c.peakByte()
-		instruction := InstrucionFromByte(opcode)
+		next := c.peakByte()
+		instruction := InstrucionFromByte(opcode, next)
 
 		if instruction.String() == "Not implemented" {
 			break

@@ -727,3 +727,10 @@ func (l *ldADerefIm) Execute(c *Cpu) uint8 {
 	c.ldADerefIm()
 	return 16
 }
+
+type ldHLSPIm struct{}
+
+func (l *ldHLSPIm) String() string { return "LD HL, SP + i8" }
+func (l *ldHLSPIm) Execute(c *Cpu) uint8 {
+	return c.ldHLSPIm()
+}
