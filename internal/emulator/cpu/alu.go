@@ -763,3 +763,10 @@ func (i *adcAIm) String() string { return "ADC A, u8" }
 func (i *adcAIm) Execute(c *Cpu) uint8 {
 	return c.adcAIm()
 }
+
+type sbcAIm struct{}
+
+func (i *sbcAIm) String() string { return "SBC A, u8" }
+func (i *sbcAIm) Execute(c *Cpu) uint8 {
+	return c.sbcAIm()
+}

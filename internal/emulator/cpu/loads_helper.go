@@ -101,25 +101,13 @@ func (c *Cpu) ldSPIm() {
 }
 
 func (c *Cpu) ldHLSPIm() uint8 {
-	im := int8(c.currentByte())
-
-	var imCast, res word
-	if im >= 0 {
-		imCast = word(im)
-		res = c.sp + imCast
-		c.setFlag(FlagC, doesWordAddCarry(c.sp, imCast))
-		c.setFlag(FlagH, doesWordAddHalfCarry(c.sp, imCast))
-	} else {
-		imCast = word(-im)
-		res = c.sp - imCast
-		c.setFlag(FlagC, doesWordSubCarry(c.sp, imCast))
-		c.setFlag(FlagH, doesWordSubHalfCarry(c.sp, imCast))
-	}
-
-	c.writeDoubleRegister(res, RegsHL)
+	offset := int8(c.currentByte())
+	c.writeDoubleRegister(c.sp+word(offset), RegsHL)
 
 	c.setFlag(FlagZ, false)
 	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, (c.sp&0xf)+(word(offset)&0xf) > 0xf)
+	c.setFlag(FlagC, (c.sp&0xff)+(word(offset)&0xff) > 0xff)
 
 	return 12
 }

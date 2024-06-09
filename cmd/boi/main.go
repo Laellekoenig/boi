@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/Laellekoenig/boi/internal/emulator"
-	"github.com/Laellekoenig/boi/internal/webserver"
+	//"github.com/Laellekoenig/boi/internal/webserver"
 )
 
 func main() {
@@ -16,6 +16,7 @@ func main() {
 
 	filename := os.Args[1]
 	e := emulator.NewEmulator(filename)
-	s := webserver.NewServer(e)
-	s.Logger.Fatal(s.Start(":3000"))
+	//s := webserver.NewServer(e)
+	//s.Logger.Fatal(s.Start(":3000"))
+	e.Cpu.ContinueUnimpl()
 }

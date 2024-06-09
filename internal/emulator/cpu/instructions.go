@@ -456,6 +456,8 @@ func InstrucionFromByte(opcode, next byte) instruction {
 		return &jpCIm{}
 	case 0xdc:
 		return &callCIm{}
+	case 0xde:
+		return &sbcAIm{}
 	case 0xdf:
 		return &rst18h{}
 	case 0xe0:
@@ -506,7 +508,7 @@ func InstrucionFromByte(opcode, next byte) instruction {
 		return &cpAIm{}
 	case 0xff:
 		return &rst38h{}
+	default:
+		return &notImplemented{}
 	}
-
-	return &notImplemented{opcode}
 }

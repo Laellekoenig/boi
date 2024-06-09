@@ -53,33 +53,31 @@ func (c *Cpu) addRegReg(a, b registerType) uint8 {
 }
 
 func (c *Cpu) daa() {
-	a := c.readRegister(RegA)
-	carry := c.checkFlag(FlagC)
+	val := c.readRegister(RegA)
 
-	if !c.checkFlag(FlagN) {
-		if c.checkFlag(FlagC) || a > 0x99 {
-			a += 0x60
-			c.setFlag(FlagC, true)
-		}
+	var correction byte
+	carry := false
 
-		if c.checkFlag(FlagH) || (a&0x0f) > 0x09 {
-			a += 0x06
-		}
-
-	} else {
-		if c.checkFlag(FlagC) {
-			a -= 0x60
-		}
-
-		if c.checkFlag(FlagH) {
-			a -= 0x06
-		}
+	if c.checkFlag(FlagH) || (!c.checkFlag(FlagN) && val&0x0f > 9) {
+		correction |= 0x06
 	}
-	c.writeRegister(a, RegA)
 
-	c.setFlag(FlagZ, a == 0)
+	if c.checkFlag(FlagC) || (!c.checkFlag(FlagN) && val > 0x99) {
+		correction |= 0x60
+		carry = true
+	}
+
+	if c.checkFlag(FlagN) {
+		val -= correction
+	} else {
+		val += correction
+	}
+
+	c.writeRegister(val, RegA)
+
+	c.setFlag(FlagZ, val == 0)
 	c.setFlag(FlagH, false)
-	c.setFlag(FlagC, carry || (!c.checkFlag(FlagN) && a > 0x99))
+	c.setFlag(FlagC, carry)
 }
 
 func (c *Cpu) cpl() {
@@ -480,23 +478,14 @@ func (c *Cpu) cpADerefHL() uint8 {
 }
 
 func (c *Cpu) addSPIm() uint8 {
-	im := int32(c.currentByte())
-
-	var imCast word
-	if im >= 0 {
-		imCast = word(im)
-		c.sp += imCast
-		c.setFlag(FlagC, doesWordAddCarry(c.sp, imCast))
-		c.setFlag(FlagH, doesWordAddHalfCarry(c.sp, imCast))
-	} else {
-		imCast = word(-im)
-		c.sp -= imCast
-		c.setFlag(FlagC, doesWordSubCarry(c.sp, imCast))
-		c.setFlag(FlagH, doesWordSubHalfCarry(c.sp, imCast))
-	}
+	offset := int8(c.currentByte())
+	oldSP := c.sp
+	c.sp += word(offset)
 
 	c.setFlag(FlagZ, false)
 	c.setFlag(FlagN, false)
+	c.setFlag(FlagH, (oldSP&0xf)+(word(offset)&0xf) > 0xf)
+	c.setFlag(FlagC, (oldSP&0xff)+(word(offset)&0xff) > 0xff)
 
 	return 16
 }
@@ -512,6 +501,36 @@ func (c *Cpu) orAIm() uint8 {
 	c.setFlag(FlagN, false)
 	c.setFlag(FlagH, false)
 	c.setFlag(FlagC, false)
+
+	return 8
+}
+
+func (c *Cpu) sbcAIm() uint8 {
+	aVal := c.readRegister(RegA)
+	im := c.currentByte()
+
+	var carry uint8
+	if c.checkFlag(FlagC) {
+		carry = 1
+	}
+
+	res := aVal - im - carry
+	c.writeRegister(res, RegA)
+
+	c.setFlag(FlagZ, res == 0)
+	c.setFlag(FlagN, true)
+
+	halfCarry := doesByteSubHalfCarry(aVal, im)
+	if !halfCarry {
+		halfCarry = doesByteSubHalfCarry(aVal-im, carry)
+	}
+	c.setFlag(FlagH, halfCarry)
+
+	fullCarry := doesByteSubCarry(aVal, im)
+	if !fullCarry {
+		fullCarry = doesByteSubCarry(aVal-im, carry)
+	}
+	c.setFlag(FlagC, fullCarry)
 
 	return 8
 }
