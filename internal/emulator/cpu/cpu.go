@@ -27,6 +27,8 @@ type Cpu struct {
 
 	ime bool
 
+	toggleIme bool
+
 	bus MemoryReader
 
 	PastOps []string
@@ -94,10 +96,17 @@ func (c *Cpu) ExecuteStep() {
 
 	// TODO: handle timing
 	_ = instruction.Execute(c)
+
+	if c.toggleIme {
+		c.toggleIme = false
+		c.ime = true
+	}
 }
 
 func (c *Cpu) ContinueUnimpl() {
 	for {
+		_ = c.handleInterrupts()
+
 		opcode := c.peakCurrentByte()
 		next := c.peakNextByte()
 		instruction := InstrucionFromByte(opcode, next)
@@ -116,6 +125,11 @@ func (c *Cpu) ContinueUnimpl() {
 
 		// TODO: handle timing
 		_ = instruction.Execute(c)
+
+		if c.toggleIme {
+			c.toggleIme = false
+			c.ime = true
+		}
 	}
 }
 

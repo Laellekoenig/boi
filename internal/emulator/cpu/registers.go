@@ -85,5 +85,10 @@ func (c *Cpu) readDoubleRegister(r doubleRegisterType) word {
 func (c *Cpu) writeDoubleRegister(w word, r doubleRegisterType) {
 	bs := c.getDoubleRegister(r)
 	*bs[0] = byte(w >> 8)
-	*bs[1] = byte(w & 0xff)
+
+	if r == RegsAF {
+		*bs[1] = byte(w & 0xf0)
+	} else {
+		*bs[1] = byte(w & 0xff)
+	}
 }

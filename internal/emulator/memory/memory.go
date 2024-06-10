@@ -9,10 +9,10 @@ import (
 type word = uint16
 
 const (
-	romBank0Start = 0x0000
-	romBank0End   = 0x3fff
-	romBank1Start = 0x4000
-	romBank1End   = 0x7fff
+	romBank0Start word = 0x0000
+	romBank0End   word = 0x3fff
+	romBank1Start word = 0x4000
+	romBank1End   word = 0x7fff
 )
 
 type Memory struct {
